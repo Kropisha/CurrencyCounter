@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CurrencyCounter
 {
@@ -16,6 +12,25 @@ namespace CurrencyCounter
         {
             Greenbacks = cash;
             Coins = coins;
+        }
+
+        public static Bill operator +(Bill one, Bill two)
+        {
+            decimal current = (one.Greenbacks + one.Coins) + (two.Greenbacks + two.Coins);
+            var whole = (int) Math.Truncate(current);
+            return new Bill(whole,current - whole );
+        }
+
+        public static Bill operator -(Bill one, Bill two)
+        {
+            decimal current = (one.Greenbacks + one.Coins) - (two.Greenbacks + two.Coins);
+            var whole = (int)Math.Truncate(current);
+            return new Bill(whole, current - whole);
+        }
+
+        public override string ToString()
+        {
+            return $"The result is : {Greenbacks},{Coins}";
         }
     }
 }
