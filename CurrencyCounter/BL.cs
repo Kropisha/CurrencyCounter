@@ -43,21 +43,45 @@ namespace CurrencyCounter
 
         public Bill ToDollar(Bill bill, string currency)
         {
-            var current = (double) (bill.Greenbacks + (0.01 * (double) bill.Coins));
+            if (bill.Coins == 0)
+            {
+                bill.Coins = 0.00001;
+            }
+
+            var current = (bill.Greenbacks + bill.Coins);
             var rate = exchange.FirstOrDefault(x => x.Value == currency).Key;
             current = current / rate;
-            current = Math.Round(current, 2);
-            string[] parts = current.ToString().Split('.');
-            return new Bill(int.Parse(parts[0]), int.Parse(parts[1]));
+            if (current % 1 == 0)
+            {
+                return new Bill(current, 0.0);
+            }
+            else
+            {
+                string[] parts = current.ToString().Split('.');
+                var coins = Math.Round(double.Parse("0." + parts[1]), 2);
+                return new Bill(int.Parse(parts[0]), coins);
+            }
         }
 
         public Bill FromDollar(Bill bill, string currency)
         {
-            var current = (double) (bill.Greenbacks + (0.1 * (double) bill.Coins));
+            if (bill.Coins == 0)
+            {
+                bill.Coins = 0.00001;
+            }
+            var current = (bill.Greenbacks + bill.Coins);
             var rate = exchange.FirstOrDefault(x => x.Value == currency).Key;
             current = current * rate;
-            string[] parts = current.ToString().Split('.');
-            return new Bill(int.Parse(parts[0]), int.Parse(parts[1]));
+            if (current % 1 == 0)
+            {
+                return new Bill(current, 0.0);
+            }
+            else
+            {
+                string[] parts = current.ToString().Split('.');
+                var coins = Math.Round(double.Parse("0." + parts[1]), 2);
+                return new Bill(int.Parse(parts[0]), coins);
+            }
         }
     }
 }

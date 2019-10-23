@@ -26,75 +26,97 @@ namespace CurrencyCounter
 
         private void BtnCalculate_Click(object sender, EventArgs e)
         {
-            Validate();
-
-            Bill first = new Bill(int.Parse(tbFirstMain.Text),int.Parse(tbFirstCoins.Text));
-            Bill second = new Bill(int.Parse(tbSecondMain.Text), int.Parse(tbSecondCoins.Text));
-
-            first = Logic.ToDollar(first, cbFirst.Text);
-            second = Logic.ToDollar(second, cbSecond.Text);
-            Bill result = null;
-
-            if (cbOperation.SelectedItem == "+")
+            if (Validate())
             {
-                result = first + second;
-            }
-            else
-            {
-                result = first - second;
-            }
+                Bill first = new Bill(int.Parse(tbFirstMain.Text), double.Parse(tbFirstCoins.Text)*0.01);
+                Bill second = new Bill(int.Parse(tbSecondMain.Text), double.Parse(tbSecondCoins.Text)*0.01);
 
-            result = Logic.FromDollar(result, cbResultCurrency.Text);
-            lblResult.Text = result.ToString() + $" {cbResultCurrency.Text}";
+                first = Logic.ToDollar(first, cbFirst.Text);
+                second = Logic.ToDollar(second, cbSecond.Text);
+                Bill result = null;
+
+                if (cbOperation.SelectedItem == "+")
+                {
+                    result = first + second;
+                }
+                else
+                {
+                    result = first - second;
+                }
+
+                result = Logic.FromDollar(result, cbResultCurrency.Text);
+                lblResult.Text = result.ToString() + $" {cbResultCurrency.Text}";
+            }
         }
 
-        private void Validate()
+        private bool Validate()
         {
+            bool isCorrect = true;
             if (cbResultCurrency.SelectedItem == null)
             {
+                isCorrect = false;
                 MessageBox.Show("You should select the type of result currency.", "Error!");
             }
 
             if (cbOperation.SelectedItem == null)
             {
+                isCorrect = false;
                 MessageBox.Show("You should select the operation.", "Error!");
             }
 
             if (tbFirstMain.Text == "")
             {
-                tbFirstMain.Text = "0";
+                tbFirstMain.Text = "0.0";
             }
 
             if (tbFirstCoins.Text == "")
             {
-                tbFirstCoins.Text = "0";
+                tbFirstCoins.Text = "0.0";
             }
 
             if (tbSecondMain.Text == "")
             {
-                tbSecondMain.Text = "0";
+                tbSecondMain.Text = "0.0";
             }
 
             if (tbSecondCoins.Text == "")
             {
-                tbSecondCoins.Text = "0";
+                tbSecondCoins.Text = "0.0";
             }
+
+            return isCorrect;
         }
+
+        public ComboBox.ObjectCollection Previous { get; set; }
 
         private void CbResultCurrency_Click(object sender, EventArgs e)
         {
-            if (cbFirst.SelectedItem != null && cbSecond.SelectedItem != null)
+            ComboBox.ObjectCollection current = null;
+            if (cbResultCurrency.Items.Count != 0)
             {
-                cbResultCurrency.Items.Add(cbFirst.SelectedItem);
-                cbResultCurrency.Items.Add(cbSecond.SelectedItem);
+                current.Add(cbFirst.SelectedItem);
+                current.Add(cbSecond.SelectedItem);
             }
-            else if (cbFirst.SelectedItem == null || cbSecond.SelectedItem == null)
+            if (cbResultCurrency.Items.Count == 0 || current!=Previous)
             {
-                MessageBox.Show("You should select the type of currencies.", "Error!");
-            }
-            else if (cbFirst.SelectedItem == cbSecond.SelectedItem)
-            {
-                cbResultCurrency.Items.Add(cbFirst.SelectedItem);
+                if (cbFirst.SelectedItem != null && cbSecond.SelectedItem != null)
+                {
+                    if (cbFirst.SelectedItem == cbSecond.SelectedItem && cbSecond.SelectedItem != null)
+                    {
+                        cbResultCurrency.Items.Add(cbFirst.SelectedItem);
+                    }
+                    else
+                    {
+                        cbResultCurrency.Items.Add(cbFirst.SelectedItem);
+                        cbResultCurrency.Items.Add(cbSecond.SelectedItem);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("You should select the type of currencies.", "Error!");
+                }
+
+                Previous = cbResultCurrency.Items;
             }
         }
 
