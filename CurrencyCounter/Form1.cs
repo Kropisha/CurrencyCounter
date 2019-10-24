@@ -28,23 +28,38 @@ namespace CurrencyCounter
         {
             if (Validate())
             {
-                Bill first = new Bill(int.Parse(tbFirstMain.Text), double.Parse(tbFirstCoins.Text)*0.01);
-                Bill second = new Bill(int.Parse(tbSecondMain.Text), double.Parse(tbSecondCoins.Text)*0.01);
+                Bill first = new Bill(double.Parse(tbFirstMain.Text), double.Parse("0." + tbFirstCoins.Text));
+                Bill second = new Bill(double.Parse(tbSecondMain.Text), double.Parse("0."+tbSecondCoins.Text));
 
-                first = Logic.ToDollar(first, cbFirst.Text);
-                second = Logic.ToDollar(second, cbSecond.Text);
                 Bill result = null;
-
-                if (cbOperation.SelectedItem == "+")
+                if (cbFirst.SelectedItem != cbSecond.SelectedItem)
                 {
-                    result = first + second;
+                    first = Logic.ToDollar(first, cbFirst.Text);
+                    second = Logic.ToDollar(second, cbSecond.Text);
+
+                    if (cbOperation.SelectedItem == "+")
+                    {
+                        result = first + second;
+                    }
+                    else
+                    {
+                        result = first - second;
+                    }
+
+                    result = Logic.FromDollar(result, cbResultCurrency.Text);
                 }
                 else
                 {
-                    result = first - second;
+                    if (cbOperation.SelectedItem == "+")
+                    {
+                        result = first + second;
+                    }
+                    else
+                    {
+                        result = first - second;
+                    }
                 }
 
-                result = Logic.FromDollar(result, cbResultCurrency.Text);
                 lblResult.Text = result.ToString() + $" {cbResultCurrency.Text}";
             }
         }
@@ -87,17 +102,10 @@ namespace CurrencyCounter
             return isCorrect;
         }
 
-        public ComboBox.ObjectCollection Previous { get; set; }
-
         private void CbResultCurrency_Click(object sender, EventArgs e)
         {
-            ComboBox.ObjectCollection current = null;
-            if (cbResultCurrency.Items.Count != 0)
-            {
-                current.Add(cbFirst.SelectedItem);
-                current.Add(cbSecond.SelectedItem);
-            }
-            if (cbResultCurrency.Items.Count == 0 || current!=Previous)
+            cbResultCurrency.Items.Clear();
+            if (cbResultCurrency.Items.Count == 0)
             {
                 if (cbFirst.SelectedItem != null && cbSecond.SelectedItem != null)
                 {
@@ -115,8 +123,6 @@ namespace CurrencyCounter
                 {
                     MessageBox.Show("You should select the type of currencies.", "Error!");
                 }
-
-                Previous = cbResultCurrency.Items;
             }
         }
 

@@ -45,12 +45,12 @@ namespace CurrencyCounter
         {
             if (bill.Coins == 0)
             {
-                bill.Coins = 0.00001;
+                bill.Coins = 0.0001;
             }
 
             var current = (bill.Greenbacks + bill.Coins);
             var rate = exchange.FirstOrDefault(x => x.Value == currency).Key;
-            current = current / rate;
+            current = Math.Round((current / rate), 2);
             if (current % 1 == 0)
             {
                 return new Bill(current, 0.0);
@@ -67,11 +67,11 @@ namespace CurrencyCounter
         {
             if (bill.Coins == 0)
             {
-                bill.Coins = 0.00001;
+                bill.Coins = 0.0001;
             }
             var current = (bill.Greenbacks + bill.Coins);
             var rate = exchange.FirstOrDefault(x => x.Value == currency).Key;
-            current = current * rate;
+            current = Math.Round((current * rate), 2);
             if (current % 1 == 0)
             {
                 return new Bill(current, 0.0);

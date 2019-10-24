@@ -30,7 +30,7 @@ namespace CurrencyCounter
 
         public override string ToString()
         {
-            return $"The result is : {Greenbacks},{Coins/0.01}";
+            return $"The result is : {Greenbacks + Math.Round(Coins, 2)}";
         }
     }
 }
