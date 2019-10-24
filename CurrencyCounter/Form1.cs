@@ -18,8 +18,8 @@ namespace CurrencyCounter
             Logic = bl;
             foreach (var value in BL.exchange)
             {
-                cbFirst.Items.Add(value.Value);
-                cbSecond.Items.Add(value.Value);
+                cbFirst.Items.Add(value.Name);
+                cbSecond.Items.Add(value.Name);
             }
 
         }
@@ -81,22 +81,22 @@ namespace CurrencyCounter
 
             if (tbFirstMain.Text == "")
             {
-                tbFirstMain.Text = "0.0";
+                tbFirstMain.Text = "0";
             }
 
             if (tbFirstCoins.Text == "")
             {
-                tbFirstCoins.Text = "0.0";
+                tbFirstCoins.Text = "0";
             }
 
             if (tbSecondMain.Text == "")
             {
-                tbSecondMain.Text = "0.0";
+                tbSecondMain.Text = "0";
             }
 
             if (tbSecondCoins.Text == "")
             {
-                tbSecondCoins.Text = "0.0";
+                tbSecondCoins.Text = "0";
             }
 
             return isCorrect;
