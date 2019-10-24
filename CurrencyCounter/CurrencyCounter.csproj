@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Bill.cs" />
     <Compile Include="BL.cs" />
+    <Compile Include="Currency.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
