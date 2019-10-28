@@ -5,8 +5,6 @@ namespace CurrencyCounter
 {
     public partial class Form1 : Form
     {
-        public BL Logic { get; set; }
-
         public Form1()
         {
             InitializeComponent();
@@ -14,14 +12,11 @@ namespace CurrencyCounter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            BL bl = new BL();
-            Logic = bl;
-            foreach (var value in BL.exchange)
+            foreach (var value in Currency.exchange)
             {
                 cbFirst.Items.Add(value.Name);
                 cbSecond.Items.Add(value.Name);
             }
-
         }
 
         private void BtnCalculate_Click(object sender, EventArgs e)
@@ -34,8 +29,8 @@ namespace CurrencyCounter
                 Bill result = null;
                 if (cbFirst.SelectedItem != cbSecond.SelectedItem)
                 {
-                    first = Logic.ToDollar(first, cbFirst.Text);
-                    second = Logic.ToDollar(second, cbSecond.Text);
+                    first = first.ToDollar(first, cbFirst.Text);
+                    second = second.ToDollar(second, cbSecond.Text);
 
                     if (cbOperation.SelectedItem == "+")
                     {
@@ -46,7 +41,7 @@ namespace CurrencyCounter
                         result = first - second;
                     }
 
-                    result = Logic.FromDollar(result, cbResultCurrency.Text);
+                    result = second.FromDollar(result, cbResultCurrency.Text);
                 }
                 else
                 {

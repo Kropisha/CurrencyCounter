@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace CurrencyCounter
 {
@@ -31,6 +32,49 @@ namespace CurrencyCounter
         public override string ToString()
         {
             return $"The result is : {Greenbacks + Math.Round(Coins, 2)}";
+        }
+
+        public Bill ToDollar(Bill bill, string currency)
+        {
+            if (bill.Coins == 0)
+            {
+                bill.Coins = 0.0001;
+            }
+
+            var current = (bill.Greenbacks + bill.Coins);
+            var rate = Currency.exchange.FirstOrDefault(x => x.Name == currency).Value;
+            current = Math.Round((current / rate), 2);
+            if (current % 1 == 0)
+            {
+                return new Bill(current, 0.0);
+            }
+            else
+            {
+                string[] parts = current.ToString().Split('.');
+                var coins = Math.Round(double.Parse("0." + parts[1]), 2);
+                return new Bill(int.Parse(parts[0]), coins);
+            }
+        }
+
+        public Bill FromDollar(Bill bill, string currency)
+        {
+            if (bill.Coins == 0)
+            {
+                bill.Coins = 0.0001;
+            }
+            var current = (bill.Greenbacks + bill.Coins);
+            var rate = Currency.exchange.FirstOrDefault(x => x.Name == currency).Value;
+            current = Math.Round((current * rate), 2);
+            if (current % 1 == 0)
+            {
+                return new Bill(current, 0.0);
+            }
+            else
+            {
+                string[] parts = current.ToString().Split('.');
+                var coins = Math.Round(double.Parse("0." + parts[1]), 2);
+                return new Bill(int.Parse(parts[0]), coins);
+            }
         }
     }
 }
